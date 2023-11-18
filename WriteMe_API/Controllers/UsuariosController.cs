@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using WriteMe_API.Models;
 
 namespace WriteMe_API.Controllers
@@ -24,11 +27,35 @@ namespace WriteMe_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-          if (_context.Usuarios == null)
-          {
-              return NotFound();
-          }
-            return await _context.Usuarios.ToListAsync();
+            try
+            {
+              if (_context.Usuarios == null)
+              {
+                  return NotFound();
+              }
+                var usuarios =  await _context.Usuarios
+                .Where(post => post.UsuStatus == "A")
+                .ToListAsync();
+
+                var jsonResult = JsonSerializer.Serialize(usuarios);
+
+                return  Content(jsonResult, "application/json");
+
+            } catch (Exception ex) 
+            {
+                // Registra la excepción para obtener más detalles en los registros
+                Console.WriteLine($"Error al realizar la operación GET: {ex}");
+
+                // Registra la excepción interna si está presente
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException}");
+                }
+
+                // Devuelve un error interno del servidor con un mensaje personalizado
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+
         }
 
         // GET: api/Usuarios/5
@@ -96,21 +123,34 @@ namespace WriteMe_API.Controllers
         }
 
         // DELETE: api/Usuarios/5
-        [HttpDelete("{id}")]
+        [HttpPut("delete/{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
-            if (_context.Usuarios == null)
-            {
-                return NotFound();
-            }
             var usuario = await _context.Usuarios.FindAsync(id);
+
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
+            // Cambia el estado del usuario a "inactivo" (o cualquier otro valor que indique inactividad)
+            usuario.UsuStatus = "I"; // Suponiendo que "I" indica inactivo
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UsuarioExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }

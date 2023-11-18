@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,11 +25,32 @@ namespace WriteMe_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
         {
-          if (_context.Categorias == null)
-          {
-              return NotFound();
-          }
-            return await _context.Categorias.ToListAsync();
+            try
+            {
+              if (_context.Categorias == null)
+              {
+                  return NotFound();
+              }
+                var categorias = await _context.Categorias.ToListAsync();
+
+                var jsonResult = JsonSerializer.Serialize(categorias);
+
+                return Content(jsonResult, "application/json");
+
+            } catch (Exception ex)
+            {
+                // Registra la excepción para obtener más detalles en los registros
+                Console.WriteLine($"Error al realizar la operación GET: {ex}");
+
+                // Registra la excepción interna si está presente
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException}");
+                }
+
+                // Devuelve un error interno del servidor con un mensaje personalizado
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // GET: api/Categorias/5
