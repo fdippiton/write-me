@@ -118,21 +118,34 @@ namespace WriteMe_API.Controllers
         }
 
         // DELETE: api/Categorias/5
-        [HttpDelete("{id}")]
+        [HttpPut("delete/{id}")]
         public async Task<IActionResult> DeleteCategoria(int id)
         {
-            if (_context.Categorias == null)
-            {
-                return NotFound();
-            }
             var categoria = await _context.Categorias.FindAsync(id);
+
             if (categoria == null)
             {
                 return NotFound();
             }
 
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
+            // Cambia el estado del usuario a "inactivo" (o cualquier otro valor que indique inactividad)
+            categoria.CatStatus = "I"; // Suponiendo que "I" indica inactivo
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CategoriaExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
