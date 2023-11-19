@@ -99,8 +99,8 @@ namespace WriteMe_API.Controllers
             // Crear claims
             var claims = new[]
             {
-                new Claim("UsuId", user.UsuId.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.UsuNombre),
+                new Claim(ClaimTypes.NameIdentifier, user.UsuId.ToString()),
+                new Claim(ClaimTypes.Name, user.UsuNombre),
                 new Claim(ClaimTypes.Email, user.UsuCorreo),
                 new Claim("UsuStatus", user.UsuStatus),
             };

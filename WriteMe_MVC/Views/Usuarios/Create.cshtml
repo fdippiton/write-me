@@ -1,0 +1,51 @@
+﻿@model WriteMe_MVC.Models.Usuario
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="text-center">Registrate</h1>
+
+<div class="row d-flex justify-content-center mt-4">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuId" class="control-label" hidden></label>
+                <input asp-for="UsuId" class="form-control" hidden/>
+                <span asp-validation-for="UsuId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuNombre" class="control-label"></label>
+                <input asp-for="UsuNombre" class="form-control" />
+                <span asp-validation-for="UsuNombre" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuCorreo" class="control-label"></label>
+                <input asp-for="UsuCorreo" class="form-control" />
+                <span asp-validation-for="UsuCorreo" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuContrasena" class="control-label"></label>
+                <input asp-for="UsuContrasena" class="form-control" />
+                <span asp-validation-for="UsuContrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-4">
+                <label asp-for="UsuStatus" class="control-label" hidden></label>
+                <input asp-for="UsuStatus" class="form-control" value="A" hidden/>
+                <span asp-validation-for="UsuStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group text-center">
+                <input type="submit" value="Registrarse" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@* <div>
+    <a asp-action="Index">Back to List</a>
+</div> *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
