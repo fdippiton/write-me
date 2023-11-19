@@ -152,14 +152,17 @@ namespace WriteMe_API.Controllers
 
         // DELETE: api/Posts/5
         [HttpPut("delete/{id}")]
-        public async Task<IActionResult> DeletePost(int id, Post post)
+        public async Task<IActionResult> DeletePost(int id)
         {
-            if (id != post.PostId)
+            var article = await _context.Posts.FindAsync(id);
+
+            if (article == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(post).State = EntityState.Modified;
+            // Cambia el estado del usuario a "inactivo" (o cualquier otro valor que indique inactividad)
+            article.PostStatus = "I"; // Suponiendo que "I" indica inactivo
 
             try
             {
