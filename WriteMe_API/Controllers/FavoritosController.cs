@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using WriteMe_API.Models;
+using WriteMe_API.ViewModels;
 
 namespace WriteMe_API.Controllers
 {
@@ -24,22 +27,69 @@ namespace WriteMe_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Favorito>>> GetFavoritos()
         {
-          if (_context.Favoritos == null)
-          {
-              return NotFound();
-          }
-            return await _context.Favoritos.ToListAsync();
+
+            try
+            {
+                if (_context.Favoritos == null)
+                {
+                    return NotFound();
+                }
+                var favoritos = await _context.Favoritos
+                    .Include(x => x.FavPostNavigation)
+                    .Include(x => x.FavUsuario)
+                    .Select(favorito => new FavoritoViewModel
+                    {
+                        FavId = favorito.FavId,
+                        FavUsuarioId = favorito.FavUsuarioId,
+                        FavUsuarioNombre = favorito.FavUsuario!.UsuNombre,
+                        FavPost = favorito.FavPost,
+                        FavPostTitulo = favorito.FavPostNavigation!.PostTitulo,
+                    })
+                    .ToListAsync();
+
+                var jsonResult = JsonSerializer.Serialize(favoritos);
+
+                // Devuelve el resultado serializado
+                return Content(jsonResult, "application/json");
+
+            }
+            catch (Exception ex)
+            {
+                // Registra la excepción para obtener más detalles en los registros
+                Console.WriteLine($"Error al realizar la operación GET: {ex}");
+
+                // Registra la excepción interna si está presente
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException}");
+                }
+
+                // Devuelve un error interno del servidor con un mensaje personalizado
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // GET: api/Favoritos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Favorito>> GetFavorito(int id)
+        public async Task<ActionResult<FavoritoViewModel>> GetFavorito(int id)
         {
           if (_context.Favoritos == null)
           {
               return NotFound();
           }
-            var favorito = await _context.Favoritos.FindAsync(id);
+            var favorito = await _context.Favoritos
+                .Include(x => x.FavPostNavigation)
+                .Include(x => x.FavUsuario)
+                .Where(x => x.FavId == id)
+                .Select(favorito => new FavoritoViewModel
+                {
+                    FavId = favorito.FavId,
+                    FavUsuarioId = favorito.FavUsuarioId,
+                    FavUsuarioNombre = favorito.FavUsuario!.UsuNombre,
+                    FavPost = favorito.FavPost,
+                    FavPostTitulo = favorito.FavPostNavigation!.PostTitulo,
+                })
+                .FirstOrDefaultAsync();
 
             if (favorito == null)
             {
@@ -96,7 +146,7 @@ namespace WriteMe_API.Controllers
         }
 
         // DELETE: api/Favoritos/5
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteFavorito(int id)
         {
             if (_context.Favoritos == null)
