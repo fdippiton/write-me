@@ -38,10 +38,10 @@
                                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                                     <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
                                         <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Create">Registrarse</a>
+                                    <a class="nav-link text-dark" style="font-size:14px;" asp-area="" asp-controller="Usuarios" asp-action="Create">Registrarse</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="IniciarSesion">Iniciar sesion</a>
+                                    <a class="nav-link text-dark" style="font-size:14px;" asp-area="" asp-controller="Usuarios" asp-action="IniciarSesion">Iniciar sesion</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -50,17 +50,17 @@
                             {
                             
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
                                     @if (ViewData["UserName"] != null)
                                     {
                                         @ViewData["UserName"]
                                     }
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
+                                <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
                                         <li class="nav-item">
                                             <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
-                                                <button type="submit" class="btn btn-link text-dark text-decoration-none p-0">Cerrar sesión</button>
+                                        <button type="submit" style="font-size:14px;" class="btn btn-link text-dark text-decoration-none p-0">Cerrar sesión</button>
                                             </form>
                                         </li>
                                     </ul>
