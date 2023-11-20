@@ -18,5 +18,9 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-image: url('/assets/duotone.png'); /* Reemplaza 'tu-imagen-de-fondo.jpg' con el nombre de tu imagen */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Puedes cambiar a 'scroll' si prefieres que la imagen se desplace con el contenido */
+    background-size: cover;
 }

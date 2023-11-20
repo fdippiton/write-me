@@ -1,0 +1,71 @@
+﻿@model List<WriteMe_MVC.ViewModels.PostViewModel>
+
+@{
+    ViewData["Title"] = "GetPostsForCurrentUser";
+}
+
+<h2>Mis Articulos</h2>
+
+<div class="">
+    @functions {
+        string Truncate(string value, int length)
+        {
+            if (value.Length <= length)
+            {
+                return value;
+            }
+            else
+            {
+                return value.Substring(0, length) + " ...";
+            }
+        }
+    }
+
+    @foreach (var post in Model)
+    {
+        <div class="row mb-3">
+
+            <div class="card" style="background-color: #D1D3E2; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
+                <div class="card-body">
+                    <h6 style="font-size:12px" class="mb-0"> @post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString() </h6>
+                    <h5 class="card-title mb-0">@post.PostTitulo</h5>
+                    <p class="card-text mb-1">@Truncate(post.PostContenido, 30)</p>
+                    <a href="#" class="btn btn-primary  btn-sm">Leer más</a>
+                </div>
+            </div>
+
+            @* <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@post.PostTitulo</h5>
+                        <p class="card-text">@post.PostContenido</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Usuario: @post.PostUsuarioNombre</li>
+                        <li class="list-group-item">Categoría: @post.PostCategoriaNombre</li>
+                        <li class="list-group-item">Fecha de Publicación: @post.PostFechaPublicacion.ToString("dd/MM/yyyy HH:mm:ss")</li>
+                    </ul>
+                    <div class="card-body">
+                        <span class="badge bg-info">@post.PostStatus</span>
+                    </div>
+                </div>
+            </div> *@
+
+        </div>
+    }
+
+</div>
+
+
+<script>
+    function Truncate(text, length) {
+        return text.length > length ? text.substring(0, length) + "..." : text;
+    }
+
+    function expandContent(postId) {
+        var contentElement = document.getElementById("postContent-" + postId);
+        var fullContent = /* Obtén el contenido completo del servidor o de donde lo tengas */;
+        contentElement.innerText = fullContent;
+    }
+</script>
+

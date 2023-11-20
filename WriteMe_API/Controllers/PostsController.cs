@@ -23,6 +23,7 @@ namespace WriteMe_API.Controllers
             _context = context;
         }
 
+        // Get all posts
         // GET: api/Posts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
@@ -55,6 +56,58 @@ namespace WriteMe_API.Controllers
                 // Devuelve el resultado serializado
                 return Content(jsonResult, "application/json");
             } catch (Exception ex)
+            {
+                // Registra la excepción para obtener más detalles en los registros
+                Console.WriteLine($"Error al realizar la operación GET: {ex}");
+
+                // Registra la excepción interna si está presente
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException}");
+                }
+
+                // Devuelve un error interno del servidor con un mensaje personalizado
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        // Get all posts from a current user
+        [HttpGet("postsByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<PostViewModel>>> GetPostsForUser(int userId)
+        {
+            try
+            {
+                // Verifica si el usuario existe
+                var userExists = await _context.Usuarios.AnyAsync(u => u.UsuId == userId);
+
+                if (!userExists)
+                {
+                    return NotFound($"Usuario con ID {userId} no encontrado.");
+                }
+
+                // Obtiene los posts del usuario
+                var posts = await _context.Posts
+                    .Where(post => post.PostUsuarioId == userId)
+                    .Include(x => x.PostCategoriaNavigation)
+                    .Include(x => x.PostUsuario)
+                    .Select(post => new PostViewModel
+                    {
+                        PostId = post.PostId,
+                        PostTitulo = post.PostTitulo,
+                        PostContenido = post.PostContenido,
+                        PostFechaPublicacion = post.PostFechaPublicacion,
+                        PostUsuarioId = post.PostUsuarioId,
+                        PostUsuarioNombre = post.PostUsuario!.UsuNombre,
+                        PostCategoria = post.PostCategoria,
+                        PostCategoriaNombre = post.PostCategoriaNavigation!.CatNombre,
+                        PostStatus = post.PostStatus
+                    })
+                    .ToListAsync();
+
+                // Devuelve los posts del usuario en formato JSON
+                return Ok(posts);
+            }
+            catch (Exception ex)
             {
                 // Registra la excepción para obtener más detalles en los registros
                 Console.WriteLine($"Error al realizar la operación GET: {ex}");
