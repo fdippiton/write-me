@@ -115,7 +115,8 @@ namespace WriteMe_MVC.Controllers
             HttpContext.SignOutAsync();
 
             // Redirige al usuario a la página de inicio u otra página después de cerrar sesión
-            return RedirectToAction("Index", "Home");
+            return Content("<script>localStorage.removeItem('AuthToken'); window.location.href='/Home/Index';</script>", "text/html");
+            //return RedirectToAction("Index", "Home");
         }
 
 

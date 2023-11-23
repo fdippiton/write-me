@@ -22,22 +22,39 @@ namespace WriteMe_MVC.Controllers
 
             if (string.IsNullOrEmpty(token))
             {
-                return Unauthorized("No se pudo obtener el token desde las cookies.");
+                return View("Index");
+                //return Unauthorized("No se pudo obtener el token desde las cookies.");
             }
 
-            // Decodifica el token
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
-            // Obtiene el identificador del usuario desde el token
-            var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+            try
+            {
+                // Decodifica el token
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
-            // Obtén el nombre de usuario
-            var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
-            // Asigna el nombre de usuario a ViewBag
-            ViewData["UserName"] = userName;
+                // Verifica si el token ha expirado
+                if (jsonToken.ValidTo < DateTime.UtcNow)
+                {
+                    // Si el token ha expirado, redirige al login
+                    return RedirectToAction("IniciarSesion", "Usuarios");
+                }
 
-            return View();
+                // Obtiene el identificador del usuario desde el token
+                var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                // Obtén el nombre de usuario
+                var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
+                // Asigna el nombre de usuario a ViewBag
+                ViewData["UserName"] = userName;
+
+                return View();
+
+            } catch (Exception ex)
+            {
+                return RedirectToAction("IniciarSesion", "Usuarios");
+            }
+
         }
 
         public IActionResult Privacy()
