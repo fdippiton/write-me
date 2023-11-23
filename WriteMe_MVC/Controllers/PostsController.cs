@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -30,6 +31,7 @@ namespace WriteMe_MVC.Controllers
         // Obtener los detalles de un post especifico
         // GET: PostsController/Details/5
         [HttpGet("PostDetalles/{id}")]
+        [Authorize]
         public async Task <ActionResult> PostDetails(int id)
         {
             // Especificar la URL del endpoint de la API

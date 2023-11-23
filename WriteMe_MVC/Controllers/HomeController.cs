@@ -22,6 +22,7 @@ namespace WriteMe_MVC.Controllers
 
             if (string.IsNullOrEmpty(token))
             {
+                //return RedirectToAction("Index", "Home");
                 return View("Index");
                 //return Unauthorized("No se pudo obtener el token desde las cookies.");
             }
@@ -50,12 +51,15 @@ namespace WriteMe_MVC.Controllers
 
                 return View();
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return RedirectToAction("IniciarSesion", "Usuarios");
             }
 
         }
+
+
 
         public IActionResult Privacy()
         {

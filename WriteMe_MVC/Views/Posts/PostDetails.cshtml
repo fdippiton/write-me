@@ -13,17 +13,20 @@
             <div class="d-flex align-items-center">
                 <h3 class="me-2">
                     <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")" class="btn btn-link p-0">
-                        <i class="bi bi-arrow-left-circle-fill" style="font-size: 1.5rem;"></i>
+                        <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
            
                     </a>
-                </h3> <h6 style="font-size:13px;"> @Html.DisplayFor(model => model.PostUsuarioNombre) <br />Publicado @Html.DisplayFor(model => model.PostFechaPublicacion)</h6>
+                </h3> 
+                <h6 style="font-size:13px;"> @Html.DisplayFor(model => model.PostUsuarioNombre) <br />Publicado @Html.DisplayFor(model => model.PostFechaPublicacion)</h6> 
+                
             </div>
         <p>@Html.DisplayFor(model => model.PostContenido)</p>
         </div>
 
         <div class="col-1 text-end">
             <div>
-                <a href="@Url.Action("Edit", new { id = Model.PostId })" class="btn btn-outline-primary px-2 py-1">
+                <h6 style="background-color: #C3CFE2; font-size:13px;" class="p-1 text-center rounded-3">@Html.DisplayFor(model => model.PostCategoriaNombre) </h6>
+                <a href="@Url.Action("Edit", new { id = Model.PostId })" class=" px-2 py-1">
                     <i class="bi bi-pencil-square"></i> 
                 </a>
                @*  @Html.ActionLink("Volver", "GetPostsForCurrentuser", "Usuarios", new { @class = "btn btn-outline-primary me-1" }) *@
