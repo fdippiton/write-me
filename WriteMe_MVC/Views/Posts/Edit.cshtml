@@ -1,0 +1,56 @@
+﻿@model WriteMe_MVC.Models.Post
+
+<h4 class="text-center">Editar Post</h4>
+<hr />
+<div class="row d-flex justify-content-center bg-white py-5 rounded-2">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PostId" class="control-label" hidden></label>
+                <input asp-for="PostId" class="form-control" hidden />
+                <span asp-validation-for="PostId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PostTitulo" class="control-label"> Titulo</label>
+                <input asp-for="PostTitulo" class="form-control" />
+                <span asp-validation-for="PostTitulo" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PostContenido" class="control-label">Contenido</label>
+                @* <input asp-for="PostContenido" class="form-control" /> *@
+                <textarea asp-for="PostContenido" class="form-control" rows="6"></textarea>
+                <span asp-validation-for="PostContenido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostFechaPublicacion" class="control-label" hidden></label>
+                <input asp-for="PostFechaPublicacion" class="form-control" hidden />
+                <span asp-validation-for="PostFechaPublicacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostUsuarioId" class="control-label" hidden></label>
+                <input asp-for="PostUsuarioId" class="form-control" hidden/>
+                <span asp-validation-for="PostUsuarioId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PostCategoria" class="control-label">Categoria</label>
+                <select asp-for="PostCategoria" asp-items="ViewBag.DropDownData" class="form-control">
+                </select>
+                <span asp-validation-for="PostCategoria" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostStatus" class="control-label" hidden></label>
+                <input asp-for="PostStatus" class="form-control" hidden />
+                <span asp-validation-for="PostStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -4,7 +4,7 @@
     ViewData["Title"] = "GetPostsForCurrentUser";
 }
 
-<h3 class="text-white mt-5 mb-5">Mis Articulos</h3>
+<h3 class="text-white mt-5 mb-5 fs-4">Mis Articulos</h3>
 
 <div class="">
     @functions {
@@ -21,17 +21,21 @@
         }
     }
 
+        <div class="row mb-3">
     @foreach (var post in Model)
     {
-        <div class="row mb-3">
-
-            <div class="card" style="background-color: #D1D3E2; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
+            <div class="col-6">
+            <div class="card" style=" box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
                 <div class="card-body">
-                    <h6 style="font-size:12px" class="mb-0"> @post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString() </h6>
                     <h5 class="card-title mb-0">@post.PostTitulo</h5>
-                    <p class="card-text mb-1">@Truncate(post.PostContenido, 30)</p>
-                    <a href="#" class="btn btn-primary  btn-sm">Leer más</a>
+                    <h6 style="font-size:12px" class="mb-1"> @post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString() </h6>
+                    <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 30)</p>
+                    <h6 class="" style="font-size:13px;"><i class="bi bi-eyeglasses"></i>  @Html.ActionLink("Leer más", "PostDetails", "Posts", new { id = post.PostId }, new { @class = "text-decoration-none" })</h6>
+                     
+                    
                 </div>
+            </div>
+
             </div>
 
             @* <div class="col-md-4 mb-3">
@@ -51,8 +55,8 @@
                 </div>
             </div> *@
 
-        </div>
     }
+        </div>
 
 </div>
 
