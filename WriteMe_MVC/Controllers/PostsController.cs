@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using WriteMe_MVC.Models;
 using WriteMe_MVC.ViewModels;
@@ -34,8 +36,27 @@ namespace WriteMe_MVC.Controllers
         [Authorize]
         public async Task <ActionResult> PostDetails(int id)
         {
-            // Especificar la URL del endpoint de la API
             string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            var token = HttpContext.Request.Cookies["AuthToken"];
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            // Obtén el identificador del usuario desde el token
+            var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId) && int.TryParse(userId, out var parsedUserId))
+            {
+                // El userId ahora contiene el identificador del usuario como un entero
+                // Puedes usarlo según tus necesidades
+                Console.WriteLine($"UserId: {parsedUserId}");
+
+                ViewData["UsuarioId"] = userId;
+
+            }
+
+            // Especificar la URL del endpoint de la API
 
             PostViewModel postInfo = new PostViewModel();
             using (var client = new HttpClient())

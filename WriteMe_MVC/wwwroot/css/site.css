@@ -19,7 +19,7 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-image: url('/assets/duotone.png') !important;
+    background-image: url('/assets/duotone_white.png') !important;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;

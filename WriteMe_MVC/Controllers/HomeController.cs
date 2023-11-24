@@ -1,29 +1,59 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NuGet.Common;
+using NuGet.Protocol;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using WriteMe_MVC.Models;
+using WriteMe_MVC.ViewModels;
 
 namespace WriteMe_MVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly HttpClient httpClient;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
+            httpClient = new HttpClient();
         }
 
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
             var token = HttpContext.Request.Cookies["AuthToken"];
+
+            // Especificar la URL del endpoint de la API
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            List<PostViewModel> postInfo = new List<PostViewModel>();
+
+            using (var client = new HttpClient())
+            {
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync($"{baseApiUrl}/posts");
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    var EquiResponse = Res.Content.ReadAsStringAsync().Result;
+                    postInfo = JsonConvert.DeserializeObject<List<PostViewModel>>(EquiResponse)!;
+                    Console.WriteLine(EquiResponse.ToJson());
+                }
+            }
+
+
 
             if (string.IsNullOrEmpty(token))
             {
                 //return RedirectToAction("Index", "Home");
-                return View("Index");
+                return View("Index", postInfo);
                 //return Unauthorized("No se pudo obtener el token desde las cookies.");
             }
 
@@ -49,7 +79,7 @@ namespace WriteMe_MVC.Controllers
                 // Asigna el nombre de usuario a ViewBag
                 ViewData["UserName"] = userName;
 
-                return View();
+                return View(postInfo);
 
             }
             catch (Exception ex)

@@ -1,7 +1,74 @@
-﻿@{
+﻿@model List<WriteMe_MVC.ViewModels.PostViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center ">
-    @* <h1 class="display-4">Welcome</h1> *@
+    <p class=" text-white text-start lh-sm mt-5" style="font-family: 'Noto Serif Balinese', serif; font-size: 100px;">Escribe, inspira, <br />y sé el héroe que <br /> cambia el mundo con cada palabra.</p>
+    <h3 class=" mt-5 mb-5 fs-3 text-white" style="font-family: 'Noto Serif Balinese', serif;">Articulos</h3>
+    <div class="">
+    @functions {
+        string Truncate(string value, int length)
+        {
+            if (value.Length <= length)
+            {
+                return value;
+            }
+            else
+            {
+                return value.Substring(0, length) + " ...";
+            }
+        }
+    }
+
+        @if (Model != null)
+        {
+            <div class="row mb-3">
+            @foreach (var post in Model)
+            {
+                <div class="col-6">
+                    <div class="card mb-2" style=" box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-0">@post.PostTitulo</h5>
+                            <h6 style="font-size:12px" class="mb-1"> @post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString() </h6>
+                            <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 30)</p>
+                            <h6 class="" style="font-size:13px;"><i class="bi bi-eyeglasses"></i>  @Html.ActionLink("Leer más", "PostDetails", "Posts", new { id = post.PostId }, new { @class = "text-decoration-none" })</h6>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+            </div>
+
+        } else
+        {
+             <p>No hay artículos disponibles.</p>
+        }
+
 </div>
+  
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+    function Truncate(text, length) {
+        return text.length > length ? text.substring(0, length) + "..." : text;
+    }
+
+    function expandContent(postId) {
+        var contentElement = document.getElementById("postContent-" + postId);
+        var fullContent = /* Obtén el contenido completo del servidor o de donde lo tengas */
+        contentElement.innerText = fullContent;
+    }
+</script>

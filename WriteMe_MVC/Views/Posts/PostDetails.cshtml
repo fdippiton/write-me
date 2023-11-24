@@ -1,10 +1,17 @@
-﻿@model WriteMe_MVC.ViewModels.PostViewModel
+﻿@{
+    bool usuarioAutenticado = User.Identity.IsAuthenticated;
+}
+
+@using System.Security.Claims
+
+
+@model WriteMe_MVC.ViewModels.PostViewModel
 
 @{
     ViewData["Title"] = "PostDetails";
 }
 
-<h1 class="text-center mt-4"> @Html.DisplayFor(model => model.PostTitulo)</h1>
+<h1 class="text-center mt-5 mb-4 text-white" style="font-family: 'Noto Serif Balinese', serif;"> @Html.DisplayFor(model => model.PostTitulo)</h1>
 
 <div class="bg-white py-3 px-4 rounded-2">
 
@@ -23,15 +30,27 @@
         <p>@Html.DisplayFor(model => model.PostContenido)</p>
         </div>
 
-        <div class="col-1 text-end">
-            <div>
-                <h6 style="background-color: #C3CFE2; font-size:13px;" class="p-1 text-center rounded-3">@Html.DisplayFor(model => model.PostCategoriaNombre) </h6>
-                <a href="@Url.Action("Edit", new { id = Model.PostId })" class=" px-2 py-1">
-                    <i class="bi bi-pencil-square"></i> 
-                </a>
-               @*  @Html.ActionLink("Volver", "GetPostsForCurrentuser", "Usuarios", new { @class = "btn btn-outline-primary me-1" }) *@
+        
+            <div class="col-1 text-end">
+                <div>
+                    <h6 style="background-color: #C3CFE2; font-size:13px;" class="p-1 text-center rounded-3">@Html.DisplayFor(model => model.PostCategoriaNombre)</h6>
+
+                @if (ViewData["UsuarioId"] != null && int.TryParse(ViewData["UsuarioId"].ToString(), out int usuarioId) && usuarioId != Model.PostUsuarioId)
+                {
+                    <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1" hidden>
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                }
+                    <!-- Resto de tu código -->
+                </div>
             </div>
-        </div>
+
     </div>
 
 </div>
