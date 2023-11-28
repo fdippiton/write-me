@@ -21,7 +21,7 @@
 </head>
 <body>
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow  mt-3">
                     <div class="row d-flex justify-content-evenly w-100 align-items-center">
 
                 <div class="col-2 ">
@@ -51,7 +51,7 @@
                             {
                             
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
+                                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
                                     @if (ViewData["UserName"] != null)
                                     {
                                         @ViewData["UserName"]
@@ -89,10 +89,10 @@
         </main>
     </div>
 
-    <footer class="footer ">
+    <footer class="footer pt-3 pb-2" style="background-color: #000000; ">
         <div class="container">
-            <h6 class="text-center" style="font-size:12px;">Usuario autenticado: @usuarioAutenticado</h6>
-            <h6 class="text-center">&copy; 2023 - WriteMe</h6>
+            <h6 class="text-center text-white" style="font-size:12px;">Usuario autenticado: @usuarioAutenticado</h6>
+            <h6 class="text-center text-white">&copy; 2023 - WriteMe</h6>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
