@@ -6,6 +6,7 @@
 
 @* <h3 class="text-white mt-5 mb-5 fs-4 text-center">Mis Articulos</h3>
  *@
+<hr class="border border-success border-2 opacity-50">
 <div class="container">
     @functions {
         string Truncate(string value, int length)
@@ -21,7 +22,8 @@
         }
     }
 
-        <div class="row pt-5">
+        <div class="row pt-3">
+       
         <h2 class="mb-5 fs-3 text-center" style="">Mis articulos</h2>
     @foreach (var post in Model)
     {

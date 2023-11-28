@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using NuGet.Protocol;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -133,17 +134,48 @@ namespace WriteMe_MVC.Controllers
 
         // POST: PostsController/Edit/5
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task <ActionResult> Edit(int id, IFormCollection collection)
+        public async Task <ActionResult> Edit(int id, [FromForm] Post post)
         {
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    Console.WriteLine(post.ToJson());
+                    var content = new StringContent(JsonConvert.SerializeObject(post), Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PutAsync($"{baseApiUrl}/posts/" + id.ToString(), content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("GetPostsForCurrentUser", "Usuarios");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, "Error al actualizar el articulo. Código de estado: " + response.StatusCode);
+                    }
+                }
             }
-            catch
+            catch (HttpRequestException ex)
             {
-                return View();
+                ModelState.AddModelError(String.Empty, "Error de conexión: " + ex.Message);
             }
+            catch (JsonException ex)
+            {
+                ModelState.AddModelError(String.Empty, "Error al deserializar los datos: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(String.Empty, "Error: " + ex.Message);
+            }
+            return View(post);
+            //return RedirectToAction("PostDetails", "Posts");
         }
 
         // GET: PostsController/Delete/5

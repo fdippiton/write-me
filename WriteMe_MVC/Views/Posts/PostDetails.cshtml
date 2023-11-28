@@ -11,6 +11,7 @@
     ViewData["Title"] = "PostDetails";
 }
 
+<hr class="border border-success border-2 opacity-50">
 <h1 class="text-center mt-5 mb-4 " style="font-family: 'Noto Serif Balinese', serif;"> @Html.DisplayFor(model => model.PostTitulo)</h1>
 
 <div class="bg-white py-3 px-4 rounded-2 container">
@@ -29,7 +30,7 @@
 
                     </h6> 
 
-                    <h6 style="background-color: #095c30; color: white; font-size:13px;" class="p-1 text-center">@Html.DisplayFor(model => model.PostCategoriaNombre)</h6>
+                    <h6 style=" color: white; font-size:13px;" class="p-1 text-center bg-success">@Html.DisplayFor(model => model.PostCategoriaNombre)</h6>
                 </div>
               
             </div>
@@ -59,8 +60,7 @@
 
     </div>
 
-    <div class="row">
-        <p>@Html.DisplayFor(model => model.PostContenido)</p>
+    <div class="row pt-5">
+        <pre style="white-space: pre-wrap; font-size: 20px; font-family: 'Source Serif 4', serif;">@Html.DisplayFor(model => model.PostContenido)</pre>
     </div>
-
 </div>

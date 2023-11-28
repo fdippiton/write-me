@@ -2,8 +2,11 @@
 
 <div class="row d-flex align-items-center bg-white py-5 rounded-2 flex-column">
     <div class="col-md-8">
-<h4 class="mb-3">Editar </h4>
-        <form asp-action="Edit">
+        <div class="d-flex align-items-baseline">
+            <h6 class="mb-3 me-3">Editar articulo </h6> 
+            <h3 class="fw-bolder" style="font-family: 'Noto Serif Balinese', serif;">@Model.PostTitulo</h3>
+        </div>
+        <form asp-action="Edit" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="PostId" class="control-label" hidden></label>
@@ -43,7 +46,7 @@
                 <span asp-validation-for="PostStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Editar" class="btn btn-primary" style="font-size:13px;" />
+                <input type="submit" value="Editar" class="btn btn-dark" style="font-size:13px;" />
             </div>
           
         </form>
