@@ -4,6 +4,12 @@
     ViewData["Title"] = "Home Page";
 }
 
+@{
+    bool usuarioAutenticado = User.Identity.IsAuthenticated;
+}
+
+@using System.Security.Claims
+
 <div class="" style="">
     <div style="height: 10px; background-color:#095c30; width: 100%"></div>
     
@@ -13,9 +19,21 @@
     background-attachment: fixed;
     background-size: cover; width: 99.7vw">
     
-        <div class="col-10">
+        <div class="col-10" style="padding-bottom: 200px;">
             <h6 class=" text-white text-start " style="font-family: 'Noto Serif Balinese', serif; font-size: 70px; margin-top: 150px; ">Escribe, lee e inspira.  </h6>
-            <h6 class=" text-white text-start " style="font-family: 'Noto Serif Balinese', serif; font-size: 20px; margin-bottom: 250px;">Cambia el mundo con cada palabra.</h6>
+            <h6 class=" text-white text-start " style="font-family: 'Noto Serif Balinese', serif; font-size: 20px; ">Cambia el mundo con cada palabra.</h6>
+            @if (!usuarioAutenticado)
+            {
+                <div class="">
+                    <a class="btn  text-white px-3" style="font-size:14px; background-color: black;" asp-area="" asp-controller="Usuarios" asp-action="IniciarSesion">Crear articulo</a>
+                </div>
+
+            } else
+            {
+                <div class="" style="">
+                    <a class="btn  text-white px-4" style=" font-size:14px; background-color: black" asp-area="" asp-controller="Posts" asp-action="Create">Crear articulo</a>
+                </div>
+            }
         </div>
 
     </div>
