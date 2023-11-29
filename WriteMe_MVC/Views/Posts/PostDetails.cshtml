@@ -20,10 +20,19 @@
         <div class="col-11">
             <div class="d-flex align-items-center">
                 <h3 class="me-2">
-                    <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")" class="btn btn-link p-0">
-                        <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+                    @if (usuarioAutenticado)
+                    {
+                        <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")" class="btn btn-link p-0">
+                            <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
            
-                    </a>
+                        </a>
+                    } else
+                    {
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-link p-0">
+                            <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+
+                        </a>
+                    }
                 </h3> 
                 <div>
                     <h6 style="font-size:13px;"> @Html.DisplayFor(model => model.PostUsuarioNombre) <br />Publicado @Html.DisplayFor(model => model.PostFechaPublicacion) <br>
@@ -60,7 +69,7 @@
 
     </div>
 
-    <div class="row pt-5">
+    <div class="row pt-5 pb-5 mb-5">
         <pre style="white-space: pre-wrap; font-size: 20px; font-family: 'Source Serif 4', serif;">@Html.DisplayFor(model => model.PostContenido)</pre>
     </div>
 </div>
