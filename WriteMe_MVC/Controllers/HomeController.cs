@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using WriteMe_MVC.Models;
 using WriteMe_MVC.ViewModels;
+using System.Net.Http;
 
 namespace WriteMe_MVC.Controllers
 {
@@ -24,22 +25,19 @@ namespace WriteMe_MVC.Controllers
             httpClient = new HttpClient();
         }
 
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var token = HttpContext.Request.Cookies["AuthToken"];
-
-            // Especificar la URL del endpoint de la API
             string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
-
             List<PostViewModel> postInfo = new List<PostViewModel>();
 
             using (var client = new HttpClient())
             {
-
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.GetAsync($"{baseApiUrl}/posts");
 
+              
                 if (Res.IsSuccessStatusCode)
                 {
                     var EquiResponse = Res.Content.ReadAsStringAsync().Result;
@@ -48,46 +46,98 @@ namespace WriteMe_MVC.Controllers
                 }
             }
 
-
-
-            if (string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token))
             {
-                //return RedirectToAction("Index", "Home");
-                return View("Index", postInfo);
-                //return Unauthorized("No se pudo obtener el token desde las cookies.");
-            }
-
-
-            try
-            {
-                // Decodifica el token
-                var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-
-                // Verifica si el token ha expirado
-                if (jsonToken.ValidTo < DateTime.UtcNow)
+                try
                 {
-                    // Si el token ha expirado, redirige al login
-                    return RedirectToAction("IniciarSesion", "Usuarios");
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+                    if (jsonToken.ValidTo >= DateTime.UtcNow)
+                    {
+                        var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+                        var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
+
+                        ViewData["UserName"] = userName;
+
+                        return View(postInfo);
+                    }
                 }
-
-                // Obtiene el identificador del usuario desde el token
-                var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
-
-                // Obtén el nombre de usuario
-                var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
-                // Asigna el nombre de usuario a ViewBag
-                ViewData["UserName"] = userName;
-
-                return View(postInfo);
-
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("IniciarSesion", "Usuarios");
+                catch (Exception ex)
+                {
+                    // Log the exception if needed
+                }
             }
 
+            // Si no hay token o el token ha expirado, aún así permitir el acceso al home
+            return View(postInfo);
         }
+
+
+
+        //public async Task <IActionResult> Index()
+        //{
+        //    var token = HttpContext.Request.Cookies["AuthToken"];
+        //    // Especificar la URL del endpoint de la API
+        //    string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+        //    List<PostViewModel> postInfo = new List<PostViewModel>();
+
+
+        //    using (var client = new HttpClient())
+        //    {
+
+        //        client.DefaultRequestHeaders.Clear();
+        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //        HttpResponseMessage Res = await client.GetAsync($"{baseApiUrl}/posts");
+
+        //        if (Res.IsSuccessStatusCode)
+        //        {
+        //            var EquiResponse = Res.Content.ReadAsStringAsync().Result;
+        //            postInfo = JsonConvert.DeserializeObject<List<PostViewModel>>(EquiResponse)!;
+        //            Console.WriteLine(EquiResponse.ToJson());
+        //        }
+        //    }
+
+
+
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        //return RedirectToAction("Index", "Home");
+        //        return View("Index", postInfo);
+        //        //return Unauthorized("No se pudo obtener el token desde las cookies.");
+        //    } 
+
+
+        //    try
+        //    {
+        //        // Decodifica el token
+        //        var handler = new JwtSecurityTokenHandler();
+        //        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+        //        // Verifica si el token ha expirado
+        //        if (jsonToken.ValidTo < DateTime.UtcNow)
+        //        {
+        //            // Si el token ha expirado, redirige al login
+        //            return RedirectToAction("IniciarSesion", "Usuarios");
+        //        }
+
+        //        // Obtiene el identificador del usuario desde el token
+        //        var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        //        // Obtén el nombre de usuario
+        //        var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
+        //        // Asigna el nombre de usuario a ViewBag
+        //        ViewData["UserName"] = userName;
+
+        //        return View(postInfo);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return RedirectToAction("IniciarSesion", "Usuarios");
+        //    }
+
+        //}
 
 
 

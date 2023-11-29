@@ -22,61 +22,70 @@
         }
     }
 
-        <div class="row pt-3">
+        <div class="row pt-3 d-flex">
        
-        <h2 class="mb-5 fs-3 text-center" style="">Mis articulos</h2>
-    @foreach (var post in Model)
-    {
-            <div class="col-4 mb-3">
-                <a href="@Url.Action("PostDetails", "Posts", new { id = post.PostId })" class="text-decoration-none text-black" style="display: block; position: relative;">
-                    <div class="card mb-2 " style="box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; transition: background-color 0.3s, color 0.3s; border-radius: 8px">
-                        <div class="card-body">
-                            <h6 style="font-size:12px" class="mb-1">@post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString()</h6>
-                            <h5 class="card-title mb-0">@post.PostTitulo</h5>
-                            <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 30)</p>
-                        </div>
-                    </div>
-                </a>
-                <style>
-                    /* Estilo para el hover */
-                    .text-decoration-none:hover .card {
-                        background-color: black;
-                        color: white;
-                    }
-                </style>
+            <h2 class="mb-5 fs-3" style="">Mis articulos</h2>
+            <div class="col-2">
+                <a class="btn  text-dark px-3" style="font-size:14px; background-color: rgb(25, 135, 84, 0.5)" asp-area="" asp-controller="Posts" asp-action="Create">Nueva entrada</a>
             </div>
-          @*   <div class="col-6">
-                <div class="card" style=" box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
-                    <div class="card-body">
-                        <h6 style="font-size:12px" class="mb-1"> @post.PostUsuarioNombre  </h6>
-                        <h5 class="card-title mb-0">@post.PostTitulo</h5>
-                        <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 30)</p>
-                        <h6 style="font-size:12px" class="mb-1">@post.PostFechaPublicacion.ToShortDateString() </h6>
-                        <h6 class="" style="font-size:13px;"><i class="bi bi-eyeglasses"></i>  @Html.ActionLink("Leer más", "PostDetails", "Posts", new { id = post.PostId }, new { @class = "text-decoration-none" })</h6>
+
+            <div class="col-10">
+                <div class="row">
+
+                    @foreach (var post in Model)
+                    {
+                            <div class="col-6 mb-3">
+                                <a href="@Url.Action("PostDetails", "Posts", new { id = post.PostId })" class="text-decoration-none text-black" style="display: block; position: relative;">
+                                    <div class="card mb-2 " style="box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; transition: background-color 0.3s, color 0.3s; border-radius: 8px">
+                                        <div class="card-body">
+                                            <h6 style="font-size:12px" class="mb-1">@post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString()</h6>
+                                            <h5 class="card-title mb-0">@post.PostTitulo</h5>
+                                            <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 80)</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <style>
+                                    /* Estilo para el hover */
+                                    .text-decoration-none:hover .card {
+                                        background-color: black;
+                                        color: white;
+                                    }
+                                </style>
+                            </div>
+                          @*   <div class="col-6">
+                                <div class="card" style=" box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
+                                    <div class="card-body">
+                                        <h6 style="font-size:12px" class="mb-1"> @post.PostUsuarioNombre  </h6>
+                                        <h5 class="card-title mb-0">@post.PostTitulo</h5>
+                                        <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 30)</p>
+                                        <h6 style="font-size:12px" class="mb-1">@post.PostFechaPublicacion.ToShortDateString() </h6>
+                                        <h6 class="" style="font-size:13px;"><i class="bi bi-eyeglasses"></i>  @Html.ActionLink("Leer más", "PostDetails", "Posts", new { id = post.PostId }, new { @class = "text-decoration-none" })</h6>
                      
                     
-                    </div>
-                </div>
-            </div> *@
+                                    </div>
+                                </div>
+                            </div> *@
 
-            @* <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@post.PostTitulo</h5>
-                        <p class="card-text">@post.PostContenido</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Usuario: @post.PostUsuarioNombre</li>
-                        <li class="list-group-item">Categoría: @post.PostCategoriaNombre</li>
-                        <li class="list-group-item">Fecha de Publicación: @post.PostFechaPublicacion.ToString("dd/MM/yyyy HH:mm:ss")</li>
-                    </ul>
-                    <div class="card-body">
-                        <span class="badge bg-info">@post.PostStatus</span>
-                    </div>
-                </div>
-            </div> *@
+                            @* <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@post.PostTitulo</h5>
+                                        <p class="card-text">@post.PostContenido</p>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">Usuario: @post.PostUsuarioNombre</li>
+                                        <li class="list-group-item">Categoría: @post.PostCategoriaNombre</li>
+                                        <li class="list-group-item">Fecha de Publicación: @post.PostFechaPublicacion.ToString("dd/MM/yyyy HH:mm:ss")</li>
+                                    </ul>
+                                    <div class="card-body">
+                                        <span class="badge bg-info">@post.PostStatus</span>
+                                    </div>
+                                </div>
+                            </div> *@
 
-    }
+                    }
+                </div>
+            </div>
         </div>
 
 </div>

@@ -78,24 +78,87 @@ namespace WriteMe_MVC.Controllers
         }
 
         // GET: PostsController/Create
-        public ActionResult Create()
+        [HttpGet]
+        [Authorize]
+        public async Task <ActionResult> Create()
         {
-            return View();
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            List<Categoria> categorias = new List<Categoria>();
+
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage ResFec = await client.GetAsync($"{baseApiUrl}/categorias/");
+
+                if (ResFec.IsSuccessStatusCode )
+                {
+                    var PosResponse = ResFec.Content.ReadAsStringAsync().Result;
+                    categorias = JsonConvert.DeserializeObject<List<Categoria>>(PosResponse)!;
+
+                 
+                    ViewBag.DropDownData = new SelectList(categorias, "CatId", "CatNombre");
+                }
+                return View();
+            }
         }
 
         // POST: PostsController/Create
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([FromForm] Post post)
         {
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            var token = HttpContext.Request.Cookies["AuthToken"];
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("No se pudo obtener el token desde las cookies.");
+            }
+
+            // Decodifica el token
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            // Obtiene el identificador del usuario desde el token
+            var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+
+            
+            post.PostFechaPublicacion = DateTime.UtcNow;
+            post.PostStatus = "A";
+            if (int.TryParse(userId, out int userIdValue))
+            {
+                post.PostUsuarioId = userIdValue;
+            }
+
+            Console.WriteLine(post.ToJson());
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var postTask = httpClient.PostAsJsonAsync<Post>($"{baseApiUrl}/posts", post);
+                postTask.Wait();
+                var result = postTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("GetPostsForCurrentUser", "Usuarios");
+                }
+                else
+                {
+                    Console.WriteLine("Response Content: " + result.Content.ReadAsStringAsync().Result);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Console.WriteLine("Error: " + ex.Message);
+
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el equipo.");
             }
+            return View(post);
         }
 
         // GET: PostsController/Edit/5

@@ -145,6 +145,8 @@ namespace WriteMe_MVC.Controllers
                 var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
                 // Asigna el nombre de usuario a ViewBag
                 ViewData["UserName"] = userName;
+                ViewBag.UserId = userId;
+
 
                 Console.WriteLine(userName);
 
