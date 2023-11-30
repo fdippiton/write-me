@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using NuGet.Protocol;
 using WriteMe_API.Models;
 using WriteMe_API.ViewModels;
 
@@ -35,6 +36,7 @@ namespace WriteMe_API.Controllers
                   return NotFound();
               }
                 var posts = await _context.Posts
+                    .Where(post => post.PostStatus == "A")
                     .Include(x => x.PostCategoriaNavigation)
                     .Include(x => x.PostUsuario)
                     .Select(post => new PostViewModel
@@ -88,6 +90,7 @@ namespace WriteMe_API.Controllers
                 // Obtiene los posts del usuario
                 var posts = await _context.Posts
                     .Where(post => post.PostUsuarioId == userId)
+                    .Where(post => post.PostStatus == "A")
                     .Include(x => x.PostCategoriaNavigation)
                     .Include(x => x.PostUsuario)
                     .Select(post => new PostViewModel
@@ -162,6 +165,7 @@ namespace WriteMe_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, Post post)
         {
+             //Console.WriteLine($"Datos recibidos: {post.ToJson()}");
             if (id != post.PostId)
             {
                 return BadRequest();
@@ -204,7 +208,7 @@ namespace WriteMe_API.Controllers
         }
 
         // DELETE: api/Posts/5
-        [HttpPut("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
             var article = await _context.Posts.FindAsync(id);

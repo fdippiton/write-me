@@ -202,6 +202,7 @@ namespace WriteMe_MVC.Controllers
         public async Task <ActionResult> Edit(int id, [FromForm] Post post)
         {
             string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+            Console.WriteLine(post.ToJson());
 
             try
             {
@@ -210,7 +211,6 @@ namespace WriteMe_MVC.Controllers
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    Console.WriteLine(post.ToJson());
                     var content = new StringContent(JsonConvert.SerializeObject(post), Encoding.UTF8, "application/json");
 
                     HttpResponseMessage response = await client.PutAsync($"{baseApiUrl}/posts/" + id.ToString(), content);
@@ -242,24 +242,49 @@ namespace WriteMe_MVC.Controllers
         }
 
         // GET: PostsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
 
         // POST: PostsController/Delete/5
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id)
         {
-            try
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            using (var client = new HttpClient())
             {
-                return RedirectToAction(nameof(Index));
+                client.BaseAddress = new Uri(baseApiUrl);
+
+                try
+                {
+                    var deleteTask = await client.DeleteAsync($"{baseApiUrl}/posts/{id}");
+                    if (deleteTask.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("GetPostsForCurrentUser", "Usuarios");
+                    }
+                    else
+                    {
+                        // Handle the case where deletion failed, perhaps show an error message
+                        ModelState.AddModelError(string.Empty, "Failed to delete the post.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle the exception appropriately.
+                    // For now, we'll just log it to the console.
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    ModelState.AddModelError(string.Empty, "An error occurred while deleting the post.");
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            // If there's an error or the deletion was unsuccessful, stay on the same page or handle as needed.
+            return View();
         }
     }
 }
+

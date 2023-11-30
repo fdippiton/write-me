@@ -1,0 +1,56 @@
+﻿@model WriteMe_MVC.Models.Usuario
+
+@{
+    ViewData["Title"] = "EditPerfil";
+}
+
+<hr class="border border-success border-2 opacity-50">
+
+<div class="row d-flex align-items-center bg-white py-5 rounded-2 flex-column">
+    <div class="col-md-6">
+        <div class="d-flex align-items-baseline">
+            <h6 class="mb-3 me-3">Mi perfil </h6>
+        </div>
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UsuId" class="control-label" hidden></label>
+                <input asp-for="UsuId" class="form-control" hidden/>
+                <span asp-validation-for="UsuId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuNombre" class="control-label  fw-bold" style="font-size:14px;"></label>
+                <input asp-for="UsuNombre" class="form-control" style="font-size:13px;" />
+                <span asp-validation-for="UsuNombre" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuCorreo" class="control-label  fw-bold" style="font-size:14px;"></label>
+                <input asp-for="UsuCorreo" class="form-control" style="font-size:13px;" />
+                <span asp-validation-for="UsuCorreo" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuContrasena" class="control-label  fw-bold" style="font-size:14px;"></label>
+                <input asp-for="UsuContrasena" class="form-control" style="font-size:13px;"/>
+                <span asp-validation-for="UsuContrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UsuStatus" class="control-label" hidden></label>
+                <input asp-for="UsuStatus" class="form-control" hidden/>
+                <span asp-validation-for="UsuStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-dark" style="font-size:13px;" />
+            </div>
+        </form>
+
+    <div class="col-8 mt-4">
+        <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")">
+            <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+        </a>
+    </div>
+    </div>
+
+</div>
+
+
+

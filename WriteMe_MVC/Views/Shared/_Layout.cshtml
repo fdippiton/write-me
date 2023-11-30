@@ -59,7 +59,10 @@
                                     }
                                     </button>
                                     <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
+                                        <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
+                                        <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="Edit">Mi Perfil</a></li>
+                                @* @Html.ActionLink("Editar", "EditPerfil", "Usuarios", new { id = @ViewData["userId"] }) *@
+                                @* <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="EditPerfil">Mi Perfil</a></li> *@
                                         <li class="nav-item">
                                             <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
                                         <button type="submit" style="font-size:14px;" class="btn btn-link text-dark text-decoration-none p-0">Cerrar sesión</button>

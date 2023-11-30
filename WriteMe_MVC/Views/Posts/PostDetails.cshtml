@@ -26,12 +26,14 @@
                             <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
            
                         </a>
+                
                     } else
                     {
                         <a href="@Url.Action("Index", "Home")" class="btn btn-link p-0">
                             <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
 
                         </a>
+                
                     }
                 </h3> 
                 <div>
@@ -60,8 +62,22 @@
             else
             {
                 <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-square text-dark"></i>
                 </a>
+
+                    @using (Html.BeginForm("Delete", "Posts", new { id = Model.PostId }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-link px-2 py-1">
+                            <i class="bi bi-trash-fill text-dark"></i>
+                        </button>
+                    }
+
+                  @*   <form asp-action="Delete" method="post">
+                        <button type="submit" class="btn btn-link px-2 py-1">
+                            <i class="bi bi-trash-fill text-dark"></i>
+                        </button>
+                    </form> *@
             }
                 <!-- Resto de tu código -->
             </div>

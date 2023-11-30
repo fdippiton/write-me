@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using WriteMe_API.Models;
+using Microsoft.AspNetCore.Authorization;
+using NuGet.Protocol;
 
 namespace WriteMe_API.Controllers
 {
@@ -78,13 +80,10 @@ namespace WriteMe_API.Controllers
 
         // PUT: api/Usuarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        [HttpPut("actualizarPerfil/{id}")]
+        public async Task<IActionResult> PutUsuario(int id,  Usuario usuario)
         {
-            if (id != usuario.UsuId)
-            {
-                return BadRequest();
-            }
+            Console.WriteLine($"Datos recibidos: {usuario.ToJson()}");
 
             _context.Entry(usuario).State = EntityState.Modified;
 
