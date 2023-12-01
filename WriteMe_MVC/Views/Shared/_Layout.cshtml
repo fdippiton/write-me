@@ -21,9 +21,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Balinese&display=swap" rel="stylesheet">
     </head>
     <body>
-        <header>
+        <div class="container">
+            <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow  mt-3">
-                <div class="row d-flex justify-content-evenly w-100 align-items-center">
+                <div class="row d-flex justify-content-between w-100 align-items-center">
 
                     <div class="col-2 ">
                         <a class="navbar-brand fs-4 fw-bolder" style="font-family: 'Noto Serif Balinese', serif; vertical-align:middle;" asp-area="" asp-controller="Home" asp-action="Index">WriteMe</a>
@@ -82,18 +83,37 @@
             </nav>
         </header>
 
+        </div>
+
         <div class="">
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>
         </div>
+    <style>
+        body {
+            margin-bottom: 60px; /* Ajusta el espacio en la parte inferior para el footer fijo */
+        }
+
+        footer {
+            background-color: #252525;
+            color: #fff;
+            padding: 20px 0;
+        }
+    </style>
 
     <footer class="footer pt-3 pb-2" style="background-color: #252525; ">
-            <div class="container">
-                @* <h6 class="text-center text-white" style="font-size:12px;">Usuario autenticado: @usuarioAutenticado</h6> *@
-            <h6 class="text-center text-white" style="font-size:13px;">&copy; 2023 - WriteMe</h6>
+        <div class="container">
+            <div class="row ">
+                <div class="col-12 d-flex align-items-center flex-column">
+                    <a class="navbar-brand m-0 fs-4 p-0 fw-bolder text-white" style="font-family: 'Noto Serif Balinese', serif; vertical-align:middle;" asp-area="" asp-controller="Home" asp-action="Index">WriteMe</a>
+                    <h6 class="text-white" style="font-size:13px;">&copy; 2023</h6>
+                </div>
             </div>
-        </footer>
+        </div>
+    </footer>
+
+
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
