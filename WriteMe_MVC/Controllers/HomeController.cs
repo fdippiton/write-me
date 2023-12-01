@@ -9,6 +9,7 @@ using System.Security.Claims;
 using WriteMe_MVC.Models;
 using WriteMe_MVC.ViewModels;
 using System.Net.Http;
+using X.PagedList;
 
 namespace WriteMe_MVC.Controllers
 {
@@ -26,7 +27,7 @@ namespace WriteMe_MVC.Controllers
         }
 
         // Obtener Pagina de inicio
-        public async Task<IActionResult> Index(string categoria)
+        public async Task<IActionResult> Index(string categoria, int? page)
         {
             var token = HttpContext.Request.Cookies["AuthToken"];
             string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
@@ -53,6 +54,11 @@ namespace WriteMe_MVC.Controllers
                 postInfo = postInfo.Where(post => post.PostCategoriaNombre == categoria).ToList();
             }
 
+            int pageSize = 6; // ajusta el tamaño de la página según tus necesidades
+            int pageNumber = page ?? 1;
+            var pagedList = postInfo.ToPagedList(pageNumber, pageSize);
+
+
 
             if (!string.IsNullOrEmpty(token))
             {
@@ -68,7 +74,7 @@ namespace WriteMe_MVC.Controllers
 
                         ViewData["UserName"] = userName;
 
-                        return View(postInfo);
+                        return View(pagedList);
                     }
                 }
                 catch (Exception ex)
@@ -78,7 +84,7 @@ namespace WriteMe_MVC.Controllers
             }
 
             // Si no hay token o el token ha expirado, aún así permitir el acceso al home
-            return View(postInfo);
+            return View(pagedList);
         }
 
 

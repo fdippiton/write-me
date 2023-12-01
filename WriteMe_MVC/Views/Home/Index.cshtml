@@ -1,4 +1,9 @@
-﻿@model List<WriteMe_MVC.ViewModels.PostViewModel>
+﻿@* @model List<WriteMe_MVC.ViewModels.PostViewModel> *@
+
+
+@model X.PagedList.IPagedList<WriteMe_MVC.ViewModels.PostViewModel>
+@using X.PagedList.Mvc.Core
+@addTagHelper *, X.PagedList.Mvc.Core
 
 @{
     ViewData["Title"] = "Home Page";
@@ -97,6 +102,103 @@
                         </style>
                     </div>
                 }
+            </div>
+
+@*             <div class="d-flex justify-content-center">
+                <div class="pagination-container">
+                    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page, categoria = Context.Request.Query["categoria"] })))
+                </div>
+            </div> *@
+
+@*             <div class="d-flex justify-content-center">
+                <ul class="pagination d-flex align-items-center">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")" style="font-size:13px;">
+                        <a class="page-link " href="@Url.Action("Index", new { page = 1, categoria = Context.Request.Query["categoria"] })">Primero</a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")" >
+                        <a class="page-link text-dark" href="@Url.Action("Index", new { page = Model.PageNumber - 1, categoria = Context.Request.Query["categoria"] })"><i class="bi bi-arrow-left-circle-fill text-success" style="font-size: 1.5rem;"></i></a>
+                    </li>
+                    @for (var i = 1; i <= Model.PageCount; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link " href="@Url.Action("Index", new { page = i, categoria = Context.Request.Query["categoria"] })">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageNumber >= Model.PageCount ? "disabled" : "")">
+                        <a class="page-link text-dark" href="@Url.Action("Index", new { page = Model.PageNumber + 1, categoria = Context.Request.Query["categoria"] })"><i class="bi bi-arrow-right-circle-fill  text-success" style="font-size: 1.5rem;"></i></a>
+                    </li>
+                    <li class="page-item  @(Model.PageNumber == Model.PageCount ? "disabled" : "")" style="font-size:13px;">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.PageCount, categoria = Context.Request.Query["categoria"] })">Último</a>
+                    </li>
+                </ul>
+            </div> *@
+
+            <style>
+                .pagination {
+                    list-style: none;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .page-item {
+                    margin: 0 5px;
+                }
+
+                .page-link {
+                    color: #30915b;
+                    background-color: #fff; /* Fondo blanco para los enlaces */
+                    border: 1px solid #30915b;
+                }
+
+                    .page-link:hover {
+                        color: #fff;
+                        background-color: #30915b; /* Cambia el color de fondo al pasar el ratón */
+                        border: 1px solid #30915b;
+                    }
+
+                .page-item.active .page-link {
+                    color: #fff;
+                    background-color: #252525; /* Fondo para el número activo */
+                    border: 1px solid #252525;
+                }
+
+                .page-item.disabled .page-link {
+                    color: #888;
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                }
+
+                .page-link i {
+                    font-size: 1.5rem;
+                }
+
+                .success {
+                    color: #252525;
+                }
+            </style>
+
+            <div class="d-flex justify-content-center">
+                <ul class="pagination" style="font-size:12px;">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")" >
+                        <a class="page-link" href="@Url.Action("Index", new { page = 1, categoria = Context.Request.Query["categoria"] })">Primero</a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+                        <a class="page-link text-dark" href="@Url.Action("Index", new { page = Model.PageNumber - 1, categoria = Context.Request.Query["categoria"] })"><i class="bi bi-arrow-left-circle-fill success"></i></a>
+                    </li>
+                    @for (var i = 1; i <= Model.PageCount; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, categoria = Context.Request.Query["categoria"] })">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageNumber >= Model.PageCount ? "disabled" : "")">
+                        <a class="page-link text-dark" href="@Url.Action("Index", new { page = Model.PageNumber + 1, categoria = Context.Request.Query["categoria"] })"><i class="bi bi-arrow-right-circle-fill success"></i></a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.PageCount, categoria = Context.Request.Query["categoria"] })">Último</a>
+                    </li>
+                </ul>
             </div>
 
         } else

@@ -37,6 +37,7 @@ namespace WriteMe_API.Controllers
               }
                 var posts = await _context.Posts
                     .Where(post => post.PostStatus == "A")
+                    .OrderByDescending(post => post.PostFechaPublicacion)
                     .Include(x => x.PostCategoriaNavigation)
                     .Include(x => x.PostUsuario)
                     .Select(post => new PostViewModel
