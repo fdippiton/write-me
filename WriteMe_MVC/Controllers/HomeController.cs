@@ -26,7 +26,7 @@ namespace WriteMe_MVC.Controllers
         }
 
         // Obtener Pagina de inicio
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string categoria)
         {
             var token = HttpContext.Request.Cookies["AuthToken"];
             string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
@@ -46,6 +46,13 @@ namespace WriteMe_MVC.Controllers
                     Console.WriteLine(EquiResponse.ToJson());
                 }
             }
+
+            if (!string.IsNullOrEmpty(categoria))
+            {
+                // Filtra los artículos según la categoría seleccionada
+                postInfo = postInfo.Where(post => post.PostCategoriaNombre == categoria).ToList();
+            }
+
 
             if (!string.IsNullOrEmpty(token))
             {

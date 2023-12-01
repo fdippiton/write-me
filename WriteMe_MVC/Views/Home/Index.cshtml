@@ -53,7 +53,25 @@
             }
         }
 
-        @if (Model != null)
+        <div class="row mb-3">
+            <div class="row d-flex justify-content-center">
+                <form method="get" asp-action="Index" asp-controller="Home">
+                    <div class="mb-3 d-flex">
+                        <label for="categoria" class="form-labe fw-bolder" style="font-size:13px">Filtrar por facultad:</label>
+                        <select id="categoria" name="categoria" class="form-select" style="font-size: 13px">
+                            <option value="" >Todas las categorías</option>
+                            @foreach (var categoria in Model.Select(post => post.PostCategoriaNombre).Distinct())
+                            {
+                                <option value="@categoria">@categoria</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn ms-3 text-white" style="background-color: #30915b; font-size: 13px">Filtrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (Model != null && Model.Any())
         {
             <div class="row pb-5">
                 <h2 class="mb-5 fs-3 text-center" style="">Articulos</h2>
