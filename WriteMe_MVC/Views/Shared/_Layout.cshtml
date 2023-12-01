@@ -50,7 +50,7 @@
                         } else
                         {
                             <div class="dropdown">
-                                <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
+                                <button class="border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
                                 @if (ViewData["UserName"] != null)
                                 {
                                     @ViewData["UserName"]
@@ -58,10 +58,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
-                                    <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="Edit">Mi Perfil</a></li>
+                                <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="Edit">Mi Perfil</a></li>
+                                <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Favoritos" asp-action="Index">Guardados</a></li>
                                     <li class="nav-item">
                                         <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
-                                            <button type="submit" style="font-size:14px;" class="btn btn-link text-dark text-decoration-none p-0">Cerrar sesión</button>
+                                            <button type="submit" style="font-size:14px;" class="btn btn-link text-danger text-decoration-none p-0">Cerrar sesión</button>
                                         </form>
                                     </li>
                                 </ul>

@@ -24,7 +24,7 @@ namespace WriteMe_API.Controllers
         }
 
         // GET: api/Favoritos
-        [HttpGet]
+        [HttpGet("Obtenerfavoritos/{userId}")]
         public async Task<ActionResult<IEnumerable<Favorito>>> GetFavoritos(int userId)
         {
             try

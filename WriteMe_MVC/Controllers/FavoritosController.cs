@@ -27,7 +27,7 @@ namespace WriteMe_MVC.Controllers
         // GET: FavoritosController
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<FavoritoViewModel>>> GetFavoritos()
+        public async Task<ActionResult<IEnumerable<FavoritoViewModel>>> Index()
         {
             try
             {
@@ -69,7 +69,7 @@ namespace WriteMe_MVC.Controllers
 
                 // Construye la URL de la API utilizando el identificador del usuario
                 string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
-                string apiUrl = $"{baseApiUrl}/favoritos/{intUserId}";
+                string apiUrl = $"{baseApiUrl}/favoritos/Obtenerfavoritos/{intUserId}";
 
                 // Realiza la solicitud a la API
                 using (var client = new HttpClient())
@@ -246,24 +246,31 @@ namespace WriteMe_MVC.Controllers
         }
 
         // GET: FavoritosController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
 
         // POST: FavoritosController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            using (var client = new HttpClient())
             {
-                return RedirectToAction(nameof(Index));
+                client.BaseAddress = new Uri(baseApiUrl);
+                var deleteTask = client.DeleteAsync($"{baseApiUrl}/favoritos/delete/" + id.ToString());
+                deleteTask.Wait();
+                var result = deleteTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
     }
 }
