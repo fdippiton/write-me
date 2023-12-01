@@ -47,6 +47,25 @@
                     <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1" hidden>
                         <i class="bi bi-pencil-square"></i>
                     </a>
+
+                    @using (Html.BeginForm("MarcarPostFavorito", "Posts", new { id = Model.PostId }, FormMethod.Post))
+                    {
+                        @if (ViewData["FavoritoState"] is bool favoritoState && favoritoState)
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                <i class="bi bi-bookmark-fill text-dark"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                <i class="bi bi-bookmark text-dark"></i>
+                            </button>
+
+                        }
+                    }
                 }
                 else
                 {
