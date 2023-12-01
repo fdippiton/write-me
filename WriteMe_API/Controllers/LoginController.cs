@@ -70,7 +70,7 @@ namespace WriteMe_API.Controllers
             try
             {
                 var currentUser = _context.Usuarios.FirstOrDefault(user => user.UsuCorreo == userLogin.UsuCorreo
-                    && user.UsuContrasena == userLogin.UsuContrasena);
+                    && user.UsuContrasena == userLogin.UsuContrasena && user.UsuStatus == "A");
 
                 if (currentUser != null)
                 {

@@ -27,7 +27,9 @@
 
         <div class="col-10">
             <div class="row ">
-                @foreach (var favorito in Model)
+                @if (Model.Any())
+                {
+                    @foreach (var favorito in Model)
                 {
                     <div class="col-4 mb-3">
                         <div class="card mb-2 d-flex" style="box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; transition: background-color 0.3s, color 0.3s; border-radius: 8px">
@@ -62,7 +64,10 @@
                             }
                         </style>
                     </div>
-
+                    }
+                } else
+                {
+                    <p style="font-size:13px">No hay articulos guardados.</p>
                 }
             </div>
         </div>

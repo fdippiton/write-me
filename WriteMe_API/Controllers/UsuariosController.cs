@@ -119,19 +119,25 @@ namespace WriteMe_API.Controllers
             return CreatedAtAction("GetUsuario", new { id = usuario.UsuId }, usuario);
         }
 
+  
+
         // DELETE: api/Usuarios/5
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
 
-            if (usuario == null)
+            if (_context.Usuarios == null)
             {
                 return NotFound();
             }
+            var usuario = await _context.Usuarios.FindAsync(id);
 
-            // Cambia el estado del usuario a "inactivo" (o cualquier otro valor que indique inactividad)
+
+            _context.Entry(usuario).State = EntityState.Modified;
+
             usuario.UsuStatus = "I"; // Suponiendo que "I" indica inactivo
+
+            Console.WriteLine($"Datos recibidos: {usuario.ToJson()}");
 
             try
             {

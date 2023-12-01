@@ -40,6 +40,12 @@ namespace WriteMe_MVC.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult UserNotFound()
+        {
+            return View();
+        }
+
         // Perfil de Usuario
         [HttpGet]
         [Authorize]
@@ -257,7 +263,8 @@ namespace WriteMe_MVC.Controllers
                     return RedirectToAction("GetPostsForCurrentUser");
                 }
 
-                return NotFound("No se pudo loguear. Usuario no encontrado");
+                return RedirectToAction("UserNotFound");
+                //return NotFound("No se pudo loguear. Usuario no encontrado");
             }
             catch (Exception ex)
             {
@@ -454,24 +461,135 @@ namespace WriteMe_MVC.Controllers
         //}
 
         // GET: UsuariosController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public async Task <ActionResult> Delete(int id)
         {
-            return View();
+            Usuario usuario = new Usuario();
+
+            try
+            {
+                // Obtiene el token desde las cookies
+                var token = HttpContext.Request.Cookies["AuthToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized("No se pudo obtener el token desde las cookies.");
+                }
+
+                // Decodifica el token
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+                // Obtiene el identificador del usuario desde el token
+                var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                // Obtén el nombre de usuario
+                var userName = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
+                // Asigna el nombre de usuario a ViewBag
+                ViewData["UserName"] = userName;
+                ViewData["UserId"] = userId;
+                ViewBag.UserId = userId;
+
+
+                //Console.WriteLine(userName);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("No se pudo obtener el identificador del usuario desde el token.");
+                }
+
+                // Convierte el identificador del usuario a un entero
+                if (!int.TryParse(userId, out var intUserId))
+                {
+                    return Unauthorized("El identificador del usuario en el token no es válido.");
+                }
+
+                // Construye la URL de la API utilizando el identificador del usuario
+                string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+                string apiUrl = $"{baseApiUrl}/usuarios/{intUserId}";
+
+
+                // Realiza la solicitud a la API
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseApiUrl);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var data = await response.Content.ReadAsStringAsync();
+                        usuario = JsonConvert.DeserializeObject<Usuario>(data);
+                    }
+                    else
+                    {
+                        //Console.WriteLine("Error al llamar a la Web API: " + response.ReasonPhrase);
+                        ModelState.AddModelError(String.Empty, "Error al obtener datos. Código de estado: " + response.StatusCode);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Registra la excepción para obtener más detalles en los registros
+                Console.WriteLine($"Error al realizar la operación GET: {ex}");
+
+                // Registra la excepción interna si está presente
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException}");
+                }
+
+                // Devuelve un error interno del servidor con un mensaje personalizado
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+
+            return View(usuario);
         }
 
         // POST: UsuariosController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task <ActionResult> Delete(string id)
         {
-            try
+             string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+    try
+    {
+        using (var client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = await client.PutAsync($"{baseApiUrl}/usuarios/delete/{id}", null);
+
+            if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction(nameof(Index));
+                HttpContext.SignOutAsync();
+
+                // Redirige al usuario a la página de inicio u otra página después de cerrar sesión
+                return Content("<script>localStorage.removeItem('AuthToken'); window.location.href='/Home/Index';</script>", "text/html");
+
+                // Redirigir a la acción Create después de cerrar la sesión
+                //return RedirectToAction("Create", "Usuarios");
             }
-            catch
+            else
             {
-                return View();
+                ModelState.AddModelError(String.Empty, "Error al inactivar el usuario. Código de estado: " + response.StatusCode);
             }
+        }
+    }
+    catch (HttpRequestException ex)
+    {
+        ModelState.AddModelError(String.Empty, "Error de conexión: " + ex.Message);
+    }
+    catch (Exception ex)
+    {
+        ModelState.AddModelError(String.Empty, "Error: " + ex.Message);
+    }
+
+    return RedirectToAction("Index", "Home");
         }
     }
 }

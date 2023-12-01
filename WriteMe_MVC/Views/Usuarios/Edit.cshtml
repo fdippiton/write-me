@@ -8,8 +8,13 @@
 
 <div class="row d-flex align-items-center bg-white py-5 rounded-2 flex-column">
     <div class="col-md-6">
-        <div class="d-flex align-items-baseline">
-            <h6 class="mb-3 me-3">Mi perfil </h6>
+        <div class="d-flex align-items-baseline mb-3">
+            <div class="col-8 mt-4 d-flex align-items-center">
+                <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")">
+                    <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+                </a>
+                <h6 class="ms-3 mb-0">Mi perfil </h6>
+            </div>
         </div>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -43,9 +48,12 @@
             </div>
         </form>
 
-        <div class="col-8 mt-4">
-            <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")">
-                <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+
+
+        <div class="col-8 mt-4" style="font-size:13px;">
+            ¿Quieres eliminar tu cuenta?
+            <a href="@Url.Action("Delete", "Usuarios")" class="fw-bolder text-danger" >
+                Eliminar cuenta
             </a>
         </div>
     </div>
