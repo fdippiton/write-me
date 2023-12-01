@@ -73,7 +73,7 @@ namespace WriteMe_API.Controllers
             }
         }
 
-        // Get all posts from a current user
+        // Obtener todos los post por usuario
         [HttpGet("postsByUser/{userId}")]
         public async Task<ActionResult<IEnumerable<PostViewModel>>> GetPostsForUser(int userId)
         {
@@ -161,7 +161,6 @@ namespace WriteMe_API.Controllers
         }
 
         // PUT: api/Posts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, Post post)
         {
@@ -193,7 +192,6 @@ namespace WriteMe_API.Controllers
         }
 
         // POST: api/Posts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Post>> PostPosts(Post post)
         {

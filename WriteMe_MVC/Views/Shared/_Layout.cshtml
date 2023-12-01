@@ -7,101 +7,95 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WriteMe_MVC</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Balinese&family=Roboto:ital,wght@0,400;0,900;1,500;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;0,8..60,800;0,8..60,900;1,8..60,400;1,8..60,500;1,8..60,600;1,8..60,700;1,8..60,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WriteMe_MVC.styles.css" asp-append-version="true" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Balinese&display=swap" rel="stylesheet">
-</head>
-<body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - WriteMe_MVC</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Balinese&family=Roboto:ital,wght@0,400;0,900;1,500;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;0,8..60,800;0,8..60,900;1,8..60,400;1,8..60,500;1,8..60,600;1,8..60,700;1,8..60,800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/WriteMe_MVC.styles.css" asp-append-version="true" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Balinese&display=swap" rel="stylesheet">
+    </head>
+    <body>
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow  mt-3">
                 <div class="row d-flex justify-content-evenly w-100 align-items-center">
 
                     <div class="col-2 ">
                         <a class="navbar-brand fs-4 fw-bolder" style="font-family: 'Noto Serif Balinese', serif; vertical-align:middle;" asp-area="" asp-controller="Home" asp-action="Index">WriteMe</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                    aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
                     </div>
 
                     <div class="col-6 d-flex justify-content-end">
 
-                            @if (!usuarioAutenticado)
-                            {
-                                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                                    <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
-                                        <li class="nav-item">
-                                    <a class="nav-link text-dark" style="font-size:14px;" asp-area="" asp-controller="Usuarios" asp-action="Create">Registrarse</a>
-                                        </li>
-                                        <li class="nav-item">
-                                    <a class="nav-link text-dark" style="font-size:14px;" asp-area="" asp-controller="Usuarios" asp-action="IniciarSesion">Iniciar sesion</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                        @if (!usuarioAutenticado)
+                        {
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" style="font-size:14px;" asp-area="" asp-controller="Usuarios" asp-action="Create">Registrarse</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" style="font-size:14px;" asp-area="" asp-controller="Usuarios" asp-action="IniciarSesion">Iniciar sesion</a>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            } else
-                            {
-                            
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
-                                    @if (ViewData["UserName"] != null)
-                                    {
-                                        @ViewData["UserName"]
-                                    }
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
-                                        <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="Edit">Mi Perfil</a></li>
-                                @* @Html.ActionLink("Editar", "EditPerfil", "Usuarios", new { id = @ViewData["userId"] }) *@
-                                @* <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="EditPerfil">Mi Perfil</a></li> *@
-                                        <li class="nav-item">
-                                            <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
-                                        <button type="submit" style="font-size:14px;" class="btn btn-link text-dark text-decoration-none p-0">Cerrar sesión</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                            }
+                        } else
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px;">
+                                @if (ViewData["UserName"] != null)
+                                {
+                                    @ViewData["UserName"]
+                                }
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="GetPostsForCurrentUser">Mis Articulos</a></li>
+                                    <li><a class="dropdown-item" style="font-size:14px;" asp-controller="Usuarios" asp-action="Edit">Mi Perfil</a></li>
+                                    <li class="nav-item">
+                                        <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
+                                            <button type="submit" style="font-size:14px;" class="btn btn-link text-dark text-decoration-none p-0">Cerrar sesión</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
 
-                        @*        <ul class="list-unstyled list-inline d-flex justify-content-end">
-                                <li class="nav-item">
-                                    <!-- Agrega aquí el enlace para cerrar sesión -->
-                                    <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
-                                        <button type="submit" class="btn btn-link text-dark text-decoration-none">Cerrar sesión</button>
-                                    </form>
-                                </li>
-                            </ul> *@
-                            
-                        </div>
-
-
+                    @*<ul class="list-unstyled list-inline d-flex justify-content-end">
+                        <li class="nav-item">
+                            <!-- Agrega aquí el enlace para cerrar sesión -->
+                            <form asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion" method="post" class="nav-link">
+                                <button type="submit" class="btn btn-link text-dark text-decoration-none">Cerrar sesión</button>
+                            </form>
+                        </li>
+                     </ul> *@
+                    </div>
                 </div>
             </nav>
         </header>
-    <div class="">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="footer pt-3 pb-2" style="background-color: #000000; ">
-        <div class="container">
-            <h6 class="text-center text-white" style="font-size:12px;">Usuario autenticado: @usuarioAutenticado</h6>
-            <h6 class="text-center text-white">&copy; 2023 - WriteMe</h6>
+        <div class="">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+
+        <footer class="footer pt-3 pb-2" style="background-color: #000000; ">
+            <div class="container">
+                <h6 class="text-center text-white" style="font-size:12px;">Usuario autenticado: @usuarioAutenticado</h6>
+                <h6 class="text-center text-white">&copy; 2023 - WriteMe</h6>
+            </div>
+        </footer>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 </html>

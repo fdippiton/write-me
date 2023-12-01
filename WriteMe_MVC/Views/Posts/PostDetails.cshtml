@@ -24,46 +24,65 @@
                     {
                         <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")" class="btn btn-link p-0">
                             <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
-           
                         </a>
-                
                     } else
                     {
                         <a href="@Url.Action("Index", "Home")" class="btn btn-link p-0">
                             <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
-
                         </a>
-                
                     }
                 </h3> 
                 <div>
-                    <h6 style="font-size:13px;"> @Html.DisplayFor(model => model.PostUsuarioNombre) <br />Publicado @Html.DisplayFor(model => model.PostFechaPublicacion) <br>
-
-                    </h6> 
-
+                    <h6 style="font-size:13px;"> @Html.DisplayFor(model => model.PostUsuarioNombre) <br />Publicado @Html.DisplayFor(model => model.PostFechaPublicacion) <br></h6> 
                     <h6 style=" color: white; font-size:13px;" class="p-1 text-center bg-success">@Html.DisplayFor(model => model.PostCategoriaNombre)</h6>
                 </div>
-              
             </div>
-        
         </div>
 
         
         <div class="col-1 text-end">
             <div>
-            
+                @if (ViewData["UsuarioId"] != null && int.TryParse(ViewData["UsuarioId"].ToString(), out int usuarioId) && usuarioId != Model.PostUsuarioId)
+                {
+                    <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1" hidden>
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1">
+                        <i class="bi bi-pencil-square text-dark"></i>
+                    </a>
 
-            @if (ViewData["UsuarioId"] != null && int.TryParse(ViewData["UsuarioId"].ToString(), out int usuarioId) && usuarioId != Model.PostUsuarioId)
-            {
-                <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1" hidden>
-                    <i class="bi bi-pencil-square"></i>
-                </a>
-            }
-            else
-            {
-                <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1">
-                    <i class="bi bi-pencil-square text-dark"></i>
-                </a>
+                 @*    <a href="#" class="px-2 py-1" id="favoritosLink">
+                        <i class="bi bi-bookmark"></i>
+                    </a> *@
+            @*         <a href="@Url.Action("Create", "Favoritos", new { id = Model.PostId, idUsuario = ViewData["UsuarioId"] })" class="px-2 py-1">
+                        <i class="bi bi-bookmark"></i>
+                    </a> *@
+
+
+                
+
+
+                    @using (Html.BeginForm("MarcarPostFavorito", "Posts", new { id = Model.PostId }, FormMethod.Post))
+                    {
+                        @if (ViewData["FavoritoState"] is bool favoritoState && favoritoState)
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                <i class="bi bi-bookmark-fill text-dark"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                <i class="bi bi-bookmark text-dark"></i>
+                            </button>
+                            
+                        }
+                    }
 
                     @using (Html.BeginForm("Delete", "Posts", new { id = Model.PostId }, FormMethod.Post))
                     {
@@ -72,17 +91,9 @@
                             <i class="bi bi-trash-fill text-dark"></i>
                         </button>
                     }
-
-                  @*   <form asp-action="Delete" method="post">
-                        <button type="submit" class="btn btn-link px-2 py-1">
-                            <i class="bi bi-trash-fill text-dark"></i>
-                        </button>
-                    </form> *@
-            }
-                <!-- Resto de tu código -->
+                }
             </div>
         </div>
-
     </div>
 
     <div class="row pt-5 pb-5 mb-5">

@@ -1,0 +1,60 @@
+﻿@model List<WriteMe_MVC.ViewModels.FavoritoViewModel>
+
+@{
+    ViewData["Title"] = "Favoritos";
+}
+
+<hr class="border border-success border-2 opacity-50">
+<div class="container">
+    @functions {
+        string Truncate(string value, int length)
+        {
+            if (value.Length <= length)
+            {
+                return value;
+            }
+            else
+            {
+                return value.Substring(0, length) + " ...";
+            }
+        }
+    }
+
+    <div class="row pt-3 d-flex">
+
+        <h2 class="mb-5 fs-3" style="">Articulos guardados</h2>
+        <div class="col-2">
+            <a class="btn  text-dark px-3" style="font-size:14px; background-color: rgb(25, 135, 84, 0.5)" asp-area="" asp-controller="Posts" asp-action="Create">Nueva entrada</a>
+        </div>
+
+        <div class="col-10">
+            <div class="row">
+                @foreach (var favorito in Model)
+                {
+                    <div class="col-6 mb-3">
+                        <a href="@Url.Action("PostDetails", "Posts", new { id = favorito.FavPost})" class="text-decoration-none text-black" style="display: block; position: relative;">
+                            <div class="card mb-2 " style="box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; transition: background-color 0.3s, color 0.3s; border-radius: 8px">
+                                <div class="card-body">
+                                    <h6 style="font-size:12px" class="mb-1">@favorito.FavPostTitulo</h6>
+                                </div>
+                            </div>
+                        </a>
+                        <style>
+                            /* Estilo para el hover */
+                            .text-decoration-none:hover .card {
+                                background-color: black;
+                                color: white;
+                            }
+                        </style>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+

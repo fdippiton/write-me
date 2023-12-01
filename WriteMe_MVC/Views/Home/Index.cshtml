@@ -37,28 +37,28 @@
         </div>
 
     </div>
+
     <div class="container mb-5" style=" ">
-       
-    @functions {
-        string Truncate(string value, int length)
-        {
-            if (value.Length <= length)
+        @functions {
+            string Truncate(string value, int length)
             {
-                return value;
-            }
-            else
-            {
-                return value.Substring(0, length) + " ...";
+                if (value.Length <= length)
+                {
+                    return value;
+                }
+                else
+                {
+                    return value.Substring(0, length) + " ...";
+                }
             }
         }
-    }
 
         @if (Model != null)
         {
             <div class="row pb-5">
                 <h2 class="mb-5 fs-3 text-center" style="">Articulos</h2>
-            @foreach (var post in Model)
-            {
+                @foreach (var post in Model)
+                {
                     <div class="col-4 mb-3" >
                         <a href="@Url.Action("PostDetails", "Posts", new { id = post.PostId })" class="text-decoration-none text-black" style="display: block; position: relative;">
                             <div class="card mb-2 " style="box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; transition: background-color 0.3s, color 0.3s; border-radius: 8px">
@@ -78,18 +78,7 @@
                             }
                         </style>
                     </div>
-
-            @*     <div class="col-6 mb-3">
-                    <div class="card mb-2" style=" box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;">
-                        <div class="card-body">
-                            <h6 style="font-size:12px" class="mb-1"> @post.PostUsuarioNombre ▪ @post.PostFechaPublicacion.ToShortDateString() </h6>
-                            <h5 class="card-title mb-0">@post.PostTitulo</h5>
-                            <p class="card-text mb-1" style="font-size:13px;">@Truncate(post.PostContenido, 30)</p>
-                            <h6 class="" style="font-size:13px;"><i class="bi bi-eyeglasses"></i>  @Html.ActionLink("Leer más", "PostDetails", "Posts", new { id = post.PostId }, new { @class = "text-decoration-none" })</h6>
-                        </div>
-                    </div>
-                </div> *@
-            }
+                }
             </div>
 
         } else
@@ -97,8 +86,7 @@
              <p>No hay artículos disponibles.</p>
         }
 
-</div>
-  
+    </div>
 </div>
 
 

@@ -37,11 +37,9 @@ namespace WriteMe_API.Controllers
             {
                 return NotFound("Usuario no encontrado");
             }
-
-            
-            //return Ok(currentUser);
         }
 
+        // Inicio de sesion de usuario
         [HttpPost]
         public IActionResult Login(LoginUser userLogin)
         {
@@ -62,14 +60,13 @@ namespace WriteMe_API.Controllers
                 // Manejar la excepción según tus necesidades
                 Console.WriteLine($"Error en el método Login: {ex}");
                 return StatusCode(500, "Error interno del servidor");
-                // Puedes devolver un código de estado 500 (Internal Server Error) o manejar la excepción de otra manera
+                // Se puede devolver un código de estado 500 (Internal Server Error) o manejar la excepción de otra manera
             }
         }
 
-
+        // Autenticar usuario
         private Usuario Authenticate(LoginUser userLogin)
         {
-
             try
             {
                 var currentUser = _context.Usuarios.FirstOrDefault(user => user.UsuCorreo == userLogin.UsuCorreo
@@ -83,14 +80,13 @@ namespace WriteMe_API.Controllers
             }
             catch (Exception ex)
             {
-                // Aquí puedes manejar la excepción, imprimir un mensaje de registro, etc.
-                // Puedes personalizar este bloque catch según tus necesidades específicas.
                 Console.WriteLine($"Error en Authenticate: {ex.Message}");
             }
 
             return null;
         }
 
+        // Generar token
         private string Generate(Usuario user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
@@ -140,7 +136,6 @@ namespace WriteMe_API.Controllers
                     }
                 }
             }
-
             return null;
         }
 

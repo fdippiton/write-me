@@ -25,9 +25,8 @@ namespace WriteMe_API.Controllers
 
         // GET: api/Favoritos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Favorito>>> GetFavoritos()
+        public async Task<ActionResult<IEnumerable<Favorito>>> GetFavoritos(int userId)
         {
-
             try
             {
                 if (_context.Favoritos == null)
@@ -37,6 +36,7 @@ namespace WriteMe_API.Controllers
                 var favoritos = await _context.Favoritos
                     .Include(x => x.FavPostNavigation)
                     .Include(x => x.FavUsuario)
+                    .Where(x => x.FavUsuarioId == userId)
                     .Select(favorito => new FavoritoViewModel
                     {
                         FavId = favorito.FavId,
@@ -70,8 +70,8 @@ namespace WriteMe_API.Controllers
         }
 
         // GET: api/Favoritos/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FavoritoViewModel>> GetFavorito(int id)
+        [HttpGet("ObtenerFavorito/{id}/{userId}")]
+        public async Task<ActionResult<FavoritoViewModel>> GetFavorito(int id, int userId)
         {
           if (_context.Favoritos == null)
           {
@@ -80,7 +80,8 @@ namespace WriteMe_API.Controllers
             var favorito = await _context.Favoritos
                 .Include(x => x.FavPostNavigation)
                 .Include(x => x.FavUsuario)
-                .Where(x => x.FavId == id)
+                .Where(x => x.FavPost == id)
+                .Where(x => x.FavUsuarioId ==  userId)
                 .Select(favorito => new FavoritoViewModel
                 {
                     FavId = favorito.FavId,
@@ -100,7 +101,6 @@ namespace WriteMe_API.Controllers
         }
 
         // PUT: api/Favoritos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFavorito(int id, Favorito favorito)
         {
@@ -131,7 +131,6 @@ namespace WriteMe_API.Controllers
         }
 
         // POST: api/Favoritos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Favorito>> PostFavorito(Favorito favorito)
         {

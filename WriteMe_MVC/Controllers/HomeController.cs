@@ -25,6 +25,7 @@ namespace WriteMe_MVC.Controllers
             httpClient = new HttpClient();
         }
 
+        // Obtener Pagina de inicio
         public async Task<IActionResult> Index()
         {
             var token = HttpContext.Request.Cookies["AuthToken"];
@@ -138,8 +139,6 @@ namespace WriteMe_MVC.Controllers
         //    }
 
         //}
-
-
 
         public IActionResult Privacy()
         {

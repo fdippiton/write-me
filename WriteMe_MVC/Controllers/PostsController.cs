@@ -51,13 +51,11 @@ namespace WriteMe_MVC.Controllers
             {
                 // El userId ahora contiene el identificador del usuario como un entero
                 // Puedes usarlo según tus necesidades
-                Console.WriteLine($"UserId: {parsedUserId}");
+                //Console.WriteLine($"UserId: {parsedUserId}");
 
                 ViewData["UsuarioId"] = userId;
 
             }
-
-            // Especificar la URL del endpoint de la API
 
             PostViewModel postInfo = new PostViewModel();
             using (var client = new HttpClient())
@@ -67,16 +65,31 @@ namespace WriteMe_MVC.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.GetAsync($"{baseApiUrl}/posts/" + id.ToString());
 
-                if (Res.IsSuccessStatusCode)
+            
+                string favApiUrl = $"{baseApiUrl}/favoritos/ObtenerFavorito/{id}/{ViewData["UsuarioId"]}";
+                HttpResponseMessage response = await client.GetAsync(favApiUrl);
+
+                var data = await response.Content.ReadAsStringAsync();
+                var favViewModel = JsonConvert.DeserializeObject<FavoritoViewModel>(data);
+
+                if (favViewModel.FavId != 0)
+                {
+                    ViewData["FavoritoState"] = true;
+                }
+
+                    if (Res.IsSuccessStatusCode)
                 {
                     var EquiResponse = Res.Content.ReadAsStringAsync().Result;
                     postInfo = JsonConvert.DeserializeObject<PostViewModel>(EquiResponse)!;
+
+
                 }
 
                 return View(postInfo);
             }
         }
 
+        // Obtener vista de crear nuevo post
         // GET: PostsController/Create
         [HttpGet]
         [Authorize]
@@ -104,6 +117,7 @@ namespace WriteMe_MVC.Controllers
             }
         }
 
+        // Crear nuevo post
         // POST: PostsController/Create
         [HttpPost]
         [Authorize]
@@ -127,9 +141,9 @@ namespace WriteMe_MVC.Controllers
             var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
 
 
-            
             post.PostFechaPublicacion = DateTime.UtcNow;
             post.PostStatus = "A";
+
             if (int.TryParse(userId, out int userIdValue))
             {
                 post.PostUsuarioId = userIdValue;
@@ -161,6 +175,7 @@ namespace WriteMe_MVC.Controllers
             return View(post);
         }
 
+        // Obtener vista de editar post
         // GET: PostsController/Edit/5
         [HttpGet]
         public async Task<ActionResult> Edit(int id)
@@ -195,6 +210,7 @@ namespace WriteMe_MVC.Controllers
 
         }
 
+        // Editar post
         // POST: PostsController/Edit/5
         [HttpPost]
         [Authorize]
@@ -238,7 +254,6 @@ namespace WriteMe_MVC.Controllers
                 ModelState.AddModelError(String.Empty, "Error: " + ex.Message);
             }
             return View(post);
-            //return RedirectToAction("PostDetails", "Posts");
         }
 
         // GET: PostsController/Delete/5
@@ -247,6 +262,7 @@ namespace WriteMe_MVC.Controllers
         //{
         //    return View();
         //}
+
 
         // POST: PostsController/Delete/5
         [HttpPost]
@@ -275,8 +291,6 @@ namespace WriteMe_MVC.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Log or handle the exception appropriately.
-                    // For now, we'll just log it to the console.
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     ModelState.AddModelError(string.Empty, "An error occurred while deleting the post.");
                 }
@@ -284,6 +298,109 @@ namespace WriteMe_MVC.Controllers
 
             // If there's an error or the deletion was unsuccessful, stay on the same page or handle as needed.
             return View();
+        }
+
+
+
+        // POST: FavoritosController/Create
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MarcarPostFavorito(int id)
+        {
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            var token = HttpContext.Request.Cookies["AuthToken"];
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("No se pudo obtener el token desde las cookies.");
+            }
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            var userId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (!int.TryParse(userId, out int userIdValue))
+            {
+                return Unauthorized("El identificador del usuario en el token no es válido.");
+            }
+
+            Favorito favorito = new Favorito
+            {
+                FavUsuarioId = userIdValue,
+                FavPost = id
+            };
+
+            string apiUrl = $"{baseApiUrl}/favoritos/ObtenerFavorito/{favorito.FavPost}/{favorito.FavUsuarioId}";
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseApiUrl);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                var data = await response.Content.ReadAsStringAsync();
+                var favViewModel = JsonConvert.DeserializeObject<FavoritoViewModel>(data);
+
+                Console.WriteLine(favViewModel.ToJson());
+                if (favViewModel.FavId == 0)
+                {
+                   
+                    Console.WriteLine("Favorito no existe, entonces lo crearemos");
+                    try
+                    {
+                        var favoritoTask = httpClient.PostAsJsonAsync<Favorito>($"{baseApiUrl}/favoritos", favorito);
+                        favoritoTask.Wait();
+                        var result = favoritoTask.Result;
+
+                        if (result.IsSuccessStatusCode)
+                        {
+                            // Post marcado como favorito con éxito
+                            ViewData["FavoritoState"] = true;
+                            Console.WriteLine("Creado correctamente");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Response Content: " + result.Content.ReadAsStringAsync().Result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                        ModelState.AddModelError(string.Empty, "Ocurrió un error al marcar el post como favorito.");
+                    }
+
+                } else
+                {
+                    Console.WriteLine("Favorito existe, entonces lo eliminaremos");
+
+                    try
+                    {
+                        var favoritoTask = httpClient.DeleteAsync($"{baseApiUrl}/favoritos/delete/{favViewModel.FavId}");
+                        favoritoTask.Wait();
+                        var result = favoritoTask.Result;
+
+                        if (result.IsSuccessStatusCode)
+                        {
+                            // Post marcado como favorito con éxito
+                            ViewData["FavoritoState"] = false;
+                            Console.WriteLine("Eliminado correctamente");
+                            return RedirectToAction("PostDetails", new { id });
+                        }
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                        ModelState.AddModelError(string.Empty, "Ocurrió un error al marcar el post como favorito.");
+                    }
+                }
+            }
+
+            // Actualiza el estado y redirige a la página de detalles del post
+            return RedirectToAction("PostDetails", new { id });
         }
     }
 }
