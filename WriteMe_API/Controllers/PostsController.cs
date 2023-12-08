@@ -36,7 +36,7 @@ namespace WriteMe_API.Controllers
                   return NotFound();
               }
                 var posts = await _context.Posts
-                    .Where(post => post.PostStatus == "A")
+                    .Where(post => post.PostStatus == "A" && post.PostUsuario.UsuStatus == "A")
                     .OrderByDescending(post => post.PostFechaPublicacion)
                     .Include(x => x.PostCategoriaNavigation)
                     .Include(x => x.PostUsuario)

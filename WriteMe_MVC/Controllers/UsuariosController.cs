@@ -303,13 +303,17 @@ namespace WriteMe_MVC.Controllers
         [Authorize]
         public IActionResult CerrarSesion()
         {
-            // Implementa el código para cerrar la sesión aquí
+            // Elimina la cookie de autenticación
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Devuelve un script JavaScript para eliminar el token del localStorage
+            return Content("<script>document.cookie = 'AuthToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; localStorage.removeItem('AuthToken'); window.location.href='/Home/Index';</script>", "text/html");
 
             // Por ejemplo, puedes eliminar la cookie de autenticación
-            HttpContext.SignOutAsync();
+            //HttpContext.SignOutAsync();
 
             // Redirige al usuario a la página de inicio u otra página después de cerrar sesión
-            return Content("<script>localStorage.removeItem('AuthToken'); window.location.href='/Home/Index';</script>", "text/html");
+            //return Content("<script>localStorage.removeItem('AuthToken'); window.location.href='/Home/Index';</script>", "text/html");
             //return RedirectToAction("Index", "Home");
         }
 

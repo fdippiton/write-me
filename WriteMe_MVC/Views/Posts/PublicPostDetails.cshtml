@@ -1,0 +1,119 @@
+﻿@{
+    bool usuarioAutenticado = User.Identity.IsAuthenticated;
+}
+
+@using System.Security.Claims
+
+
+@model WriteMe_MVC.ViewModels.PostViewModel
+
+@{
+    ViewData["Title"] = "PostDetails";
+}
+
+<hr class="border border-success border-2 opacity-50">
+<h1 class="text-center mt-5 mb-4 " style="font-family: 'Noto Serif Balinese', serif;"> @Html.DisplayFor(model => model.PostTitulo)</h1>
+
+<div class="bg-white py-3 px-4 rounded-2 container">
+
+    <div class="row d-flex">
+        <div class="col-11">
+            <div class="d-flex align-items-center">
+                <h3 class="me-2">
+                    @if (usuarioAutenticado)
+                    {
+                        <a href="@Url.Action("GetPostsForCurrentUser", "Usuarios")" class="btn btn-link p-0">
+                            <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-link p-0">
+                            <i class="bi bi-arrow-left-circle-fill text-dark" style="font-size: 1.5rem;"></i>
+                        </a>
+                    }
+                </h3>
+                <div>
+                    <h6 style="font-size:13px;"> @Html.DisplayFor(model => model.PostUsuarioNombre) <br />Publicado @Html.DisplayFor(model => model.PostFechaPublicacion) <br></h6>
+                    <h6 style=" color: white; font-size:13px;" class="p-1 text-center bg-success">@Html.DisplayFor(model => model.PostCategoriaNombre)</h6>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-1 text-end">
+            <div>
+
+                @if (usuarioAutenticado)
+                {
+                    @if (ViewData["UsuarioId"] != null && int.TryParse(ViewData["UsuarioId"].ToString(), out int usuarioId) && usuarioId != Model.PostUsuarioId)
+                    {
+                        <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1" hidden>
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+
+
+
+                        @using (Html.BeginForm("MarcarPostFavorito", "Posts", new { id = Model.PostId }, FormMethod.Post))
+                        {
+                            @if (ViewData["FavoritoState"] is bool favoritoState && favoritoState)
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                    <i class="bi bi-bookmark-fill text-dark"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                    <i class="bi bi-bookmark text-dark"></i>
+                                </button>
+
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Edit", new { id = Model.PostId })" class="px-2 py-1">
+                            <i class="bi bi-pencil-square text-dark"></i>
+                        </a>
+
+                        @using (Html.BeginForm("MarcarPostFavorito", "Posts", new { id = Model.PostId }, FormMethod.Post))
+                        {
+                            @if (ViewData["FavoritoState"] is bool favoritoState && favoritoState)
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                    <i class="bi bi-bookmark-fill text-dark"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link px-2 py-1" style="outline: none; box-shadow: none;">
+                                    <i class="bi bi-bookmark text-dark"></i>
+                                </button>
+
+                            }
+                        }
+
+                        @using (Html.BeginForm("Delete", "Posts", new { id = Model.PostId }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link px-2 py-1">
+                                <i class="bi bi-trash-fill text-dark"></i>
+                            </button>
+                        }
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row pt-5 pb-5 mb-5">
+        <pre style="white-space: pre-wrap; font-size: 20px; font-family: 'Source Serif 4', serif;">@Html.DisplayFor(model => model.PostContenido)</pre>
+    </div>
+</div>

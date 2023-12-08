@@ -31,6 +31,35 @@ namespace WriteMe_MVC.Controllers
             return View();
         }
 
+
+
+        [HttpGet("PublicPostDetalles/{id}")]
+
+        public async Task<ActionResult> PublicPostDetails(int id)
+        {
+            string baseApiUrl = _configuration.GetSection("WriteMeApi").Value!;
+
+            PostViewModel postInfo = new PostViewModel();
+            using (var client = new HttpClient())
+            {
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync($"{baseApiUrl}/posts/" + id.ToString());
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    var EquiResponse = Res.Content.ReadAsStringAsync().Result;
+                    postInfo = JsonConvert.DeserializeObject<PostViewModel>(EquiResponse)!;
+
+
+                }
+
+                return View(postInfo);
+            }
+        }
+
+
         // Obtener los detalles de un post especifico
         // GET: PostsController/Details/5
         [HttpGet("PostDetalles/{id}")]
